@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Gestión de Pedidos</title>
+</h:head>
+
+<h:body>
+    <h:form id="formPedidos">
+
+        <p:toolbar>
+            <p:toolbarGroup>
+                <p:button value="Nuevo Pedido" icon="pi pi-plus"
+                          onclick="PF('dlgPedido').show(); return false;"
+                          styleClass="ui-button-success"/>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <br/>
+
+        <p:dataTable id="tablaPedidos" value="#{pedidoBean.pedidos}" var="p"
+                     paginator="true" rows="10"
+                     emptyMessage="No hay pedidos registrados">
+
+            <p:column headerText="ID">
+                <h:outputText value="#{p.id}"/>
+            </p:column>
+
+            <p:column headerText="Cliente">
+                <h:outputText value="#{p.cliente}"/>
+            </p:column>
+
+            <p:column headerText="Descripción">
+                <h:outputText value="#{p.descripcion}"/>
+            </p:column>
+
+            <p:column headerText="Cantidad">
+                <h:outputText value="#{p.cantidad}"/>
+            </p:column>
+
+            <p:column headerText="Total">
+                <h:outputText value="#{p.total}">
+                    <f:convertNumber type="currency" currencySymbol="$"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Fecha">
+                <h:outputText value="#{p.fecha}">
+                    <f:convertDateTime pattern="dd/MM/yyyy" type="localDate"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Acciones" style="width:120px; text-align:center">
+                <p:commandButton icon="pi pi-pencil" title="Editar"
+                                 styleClass="ui-button-warning"
+                                 action="#{pedidoBean.editar(p)}"
+                                 update=":formPedidos:panelDialogo"
+                                 oncomplete="PF('dlgPedido').show()"/>
+                <p:commandButton icon="pi pi-trash" title="Eliminar"
+                                 styleClass="ui-button-danger"
+                                 action="#{pedidoBean.eliminar(p)}"
+                                 update=":formPedidos:tablaPedidos"
+                                 process="@this">
+                    <p:confirm header="Confirmación"
+                               message="¿Desea eliminar este pedido?"
+                               icon="pi pi-exclamation-triangle"/>
+                </p:commandButton>
+            </p:column>
+
+        </p:dataTable>
+
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Sí" type="button"
+                             styleClass="ui-confirmdialog-yes ui-button-danger"/>
+            <p:commandButton value="No" type="button"
+                             styleClass="ui-confirmdialog-no"/>
+        </p:confirmDialog>
+
+        <p:dialog id="dlgPedido" header="Pedido" widgetVar="dlgPedido"
+                  modal="true" resizable="false" width="450">
+
+            <p:outputPanel id="panelDialogo">
+                <p:panelGrid columns="2" style="width:100%">
+
+                    <p:outputLabel for="cliente" value="Cliente:"/>
+                    <p:inputText id="cliente" value="#{pedidoBean.pedido.cliente}" required="true"/>
+
+                    <p:outputLabel for="descripcion" value="Descripción:"/>
+                    <p:inputText id="descripcion" value="#{pedidoBean.pedido.descripcion}" required="true"/>
+
+                    <p:outputLabel for="cantidad" value="Cantidad:"/>
+                    <p:inputNumber id="cantidad" value="#{pedidoBean.pedido.cantidad}"
+                                   decimalPlaces="0" required="true"/>
+
+                    <p:outputLabel for="total" value="Total:"/>
+                    <p:inputNumber id="total" value="#{pedidoBean.pedido.total}"
+                                   decimalPlaces="2" required="true"/>
+
+                    <p:outputLabel for="fecha" value="Fecha:"/>
+                    <p:datePicker id="fecha" value="#{pedidoBean.pedido.fecha}"
+                                  pattern="dd/MM/yyyy" required="true"/>
+
+                </p:panelGrid>
+
+                <br/>
+
+                <p:commandButton value="Guardar" icon="pi pi-save"
+                                 action="#{pedidoBean.guardar}"
+                                 update=":formPedidos:tablaPedidos"
+                                 oncomplete="if(!args.validationFailed) PF('dlgPedido').hide()"/>
+
+                <p:commandButton value="Cancelar" icon="pi pi-times"
+                                 type="button"
+                                 styleClass="ui-button-secondary"
+                                 onclick="PF('dlgPedido').hide()"/>
+            </p:outputPanel>
+        </p:dialog>
+
+    </h:form>
+</h:body>
+</html>

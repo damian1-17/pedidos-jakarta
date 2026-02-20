@@ -1,0 +1,8 @@
+org\eclipse\jakarta\EJB\PedidoService.class
+org\eclipse\jakarta\hello\HelloWorldResource.class
+org\eclipse\jakarta\hello\Hello.class
+org\eclipse\jakarta\entities\Pedido.class
+org\eclipse\jakarta\Bean\PedidoBean.class
+org\eclipse\jakarta\hello\HelloApplication.class
+org\eclipse\jakarta\rest\PedidoResource.class
+org\eclipse\jakarta\rest\CorsFilter.class

@@ -1,0 +1,25 @@
+embed-server --std-out=echo --server-config=standalone.xml
+
+# 1) Módulo para el driver
+module add --name=org.postgresql --resources=/tmp/postgresql.jar 
+
+# 2) Registrar el driver
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name=postgresql,driver-module-name=org.postgresql,driver-class-name=org.postgresql.Driver)
+
+# 3) Datasource
+data-source add \
+  --name=delacruzDS \
+  --jndi-name=java:/delacruzDS \
+  --driver-name=postgresql \
+  --connection-url=jdbc:postgresql://db:5432/delacruz \
+  --user-name=postgres \
+  --password=postgres \
+  --min-pool-size=5 \
+  --max-pool-size=30 \
+  --enabled=true
+
+# 4) (Opcional) Validación de conexión
+/subsystem=datasources/data-source=delacruzDS:write-attribute(name=valid-connection-checker-class-name,value=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker)
+/subsystem=datasources/data-source=delacruzDS:write-attribute(name=exception-sorter-class-name,value=org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter)
+
+stop-embedded-server
