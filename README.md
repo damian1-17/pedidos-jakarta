@@ -119,7 +119,7 @@ docker-compose down
 
 | Campo | Tipo | Descripción |
 |---|---|---|
-| id | Long (PK) | Autogenerado |
+| id | Serial (PK) | Autogenerado |
 | cliente | String | Nombre del cliente |
 | descripcion | String | Descripción del pedido |
 | cantidad | Integer | Cantidad de productos |
